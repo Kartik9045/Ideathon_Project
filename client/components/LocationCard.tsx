@@ -36,33 +36,33 @@ export default function LocationCard({ data }: LocationCardProps) {
       </div>
 
       {/* Metrics Grid */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 gap-4 mb-4">
         {/* Temperature */}
-        <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-lg p-3">
-          <div className="flex items-center gap-2 mb-2">
-            <Wind className="w-4 h-4 text-orange-600" />
-            <span className="text-xs text-gray-600 font-medium">Temp</span>
+        <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-lg p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Wind className="w-5 h-5 text-orange-600" />
+            <span className="text-xs text-gray-600 font-medium uppercase">Temperature</span>
           </div>
-          <div className="text-xl font-bold text-gray-900">{data.temperature}°C</div>
+          <div className="text-3xl font-bold text-gray-900">{data.temperature}°C</div>
         </div>
 
         {/* Humidity */}
-        <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg p-3">
-          <div className="flex items-center gap-2 mb-2">
-            <Droplets className="w-4 h-4 text-blue-600" />
-            <span className="text-xs text-gray-600 font-medium">Humidity</span>
+        <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Droplets className="w-5 h-5 text-blue-600" />
+            <span className="text-xs text-gray-600 font-medium uppercase">Humidity</span>
           </div>
-          <div className="text-xl font-bold text-gray-900">{data.humidity}%</div>
+          <div className="text-3xl font-bold text-gray-900">{data.humidity}%</div>
         </div>
+      </div>
 
-        {/* PM2.5 */}
-        <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-3">
-          <div className="flex items-center gap-2 mb-2">
-            <Cloud className="w-4 h-4 text-gray-600" />
-            <span className="text-xs text-gray-600 font-medium">PM2.5</span>
-          </div>
-          <div className="text-xl font-bold text-gray-900">{Math.round(data.pm25)}</div>
+      {/* PM2.5 */}
+      <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-4 mb-4">
+        <div className="flex items-center gap-2 mb-2">
+          <Cloud className="w-5 h-5 text-gray-600" />
+          <span className="text-xs text-gray-600 font-medium uppercase">PM2.5</span>
         </div>
+        <div className="text-2xl font-bold text-gray-900">{Math.round(data.pm25)}</div>
       </div>
 
       {/* Detailed Pollutants */}
