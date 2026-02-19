@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { AnalyticsData, generateAllData } from "@/lib/data-generator";
 import LocationCard from "@/components/LocationCard";
 import Analytics from "@/components/Analytics";
-import { Wind, MapPin, RefreshCw } from "lucide-react";
+import { Wind, MapPin } from "lucide-react";
 
 export default function Index() {
   const [data, setData] = useState<AnalyticsData | null>(null);
@@ -13,14 +13,16 @@ export default function Index() {
     const initialData = generateAllData();
     setData(initialData);
     setIsLoading(false);
+
+    // Set up interval to refresh data every 30 seconds
+    const interval = setInterval(() => {
+      const newData = generateAllData();
+      setData(newData);
+    }, 30000);
+
+    return () => clearInterval(interval);
   }, []);
 
-  const handleRefresh = () => {
-    setIsLoading(true);
-    const newData = generateAllData();
-    setData(newData);
-    setIsLoading(false);
-  };
 
   if (isLoading || !data) {
     return (
@@ -51,13 +53,6 @@ export default function Index() {
                 </p>
               </div>
             </div>
-            <button
-              onClick={handleRefresh}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-orange-500 text-white hover:bg-orange-600 transition-colors"
-            >
-              <RefreshCw className="w-4 h-4" />
-              Refresh Data
-            </button>
           </div>
         </div>
       </header>
