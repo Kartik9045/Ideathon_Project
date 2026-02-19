@@ -74,7 +74,7 @@ export default function Index() {
             <h2 className="text-2xl font-bold text-gray-900">Current Air Quality by Location</h2>
             <p className="text-gray-600 mt-1">Real-time metrics for Delhi zones</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {data.locations.map((location) => (
               <LocationCard key={location.id} data={location} />
             ))}

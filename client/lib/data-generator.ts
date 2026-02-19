@@ -103,7 +103,6 @@ export function generateAllData(): AnalyticsData {
     generateLocationData('Connaught Place', 'cp', 0),
     generateLocationData('India Gate', 'ig', -30),
     generateLocationData('Dwarka', 'dwarka', 50),
-    generateLocationData('Gurgaon', 'gurgaon', 40),
   ];
 
   const aqiTrend = generateTimeSeries();
