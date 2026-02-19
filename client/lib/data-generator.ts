@@ -47,6 +47,14 @@ function getRandomInRange(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+// Make small incremental changes to a value instead of random jumps
+function getIncrementalChange(currentValue: number, min: number, max: number, changePercent: number = 0.1): number {
+  const maxChange = Math.max(5, currentValue * changePercent);
+  const change = (Math.random() - 0.5) * 2 * maxChange; // Random change between -maxChange and +maxChange
+  let newValue = currentValue + change;
+  return Math.max(min, Math.min(max, newValue));
+}
+
 function generateLocationData(name: string, id: string, aqiVariation: number = 0): LocationData {
   const baseAQI = getRandomInRange(20, 400);
   const aqi = Math.max(0, Math.min(500, baseAQI + aqiVariation));
@@ -111,6 +119,50 @@ export function generateAllData(): AnalyticsData {
   return {
     locations,
     aqiTrend,
+    pollutantData,
+  };
+}
+
+// Update existing data with realistic incremental changes
+export function updateDataIncrementally(previousData: AnalyticsData): AnalyticsData {
+  const updatedLocations = previousData.locations.map((location) => ({
+    ...location,
+    aqi: Math.round(getIncrementalChange(location.aqi, 0, 500, 0.08)),
+    temperature: Math.round(getIncrementalChange(location.temperature, 15, 45, 0.05) * 10) / 10,
+    humidity: Math.round(getIncrementalChange(location.humidity, 20, 80, 0.05)),
+    pm25: Math.round(getIncrementalChange(location.pm25, 5, 300, 0.08)),
+    pm10: Math.round(getIncrementalChange(location.pm10, 10, 500, 0.08)),
+    o3: Math.round(getIncrementalChange(location.o3, 10, 300, 0.08)),
+    no2: Math.round(getIncrementalChange(location.no2, 20, 200, 0.08)),
+    status: getAQIStatus(Math.round(getIncrementalChange(location.aqi, 0, 500, 0.08))),
+  }));
+
+  // Update time series - shift old data and add new data point
+  const updatedTrend = [
+    ...previousData.aqiTrend.slice(1),
+    {
+      time: new Date().toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }),
+      aqi: Math.round(getIncrementalChange(previousData.aqiTrend[previousData.aqiTrend.length - 1].aqi, 30, 350, 0.1)),
+      temperature: Math.round(getIncrementalChange(previousData.aqiTrend[previousData.aqiTrend.length - 1].temperature, 15, 45, 0.05) * 10) / 10,
+      humidity: Math.round(getIncrementalChange(previousData.aqiTrend[previousData.aqiTrend.length - 1].humidity, 20, 80, 0.05)),
+      pm25: Math.round(getIncrementalChange(previousData.aqiTrend[previousData.aqiTrend.length - 1].pm25, 5, 250, 0.08)),
+      pm10: Math.round(getIncrementalChange(previousData.aqiTrend[previousData.aqiTrend.length - 1].pm10, 15, 450, 0.08)),
+      o3: Math.round(getIncrementalChange(previousData.aqiTrend[previousData.aqiTrend.length - 1].o3, 10, 250, 0.08)),
+      no2: Math.round(getIncrementalChange(previousData.aqiTrend[previousData.aqiTrend.length - 1].no2, 20, 180, 0.08)),
+    },
+  ];
+
+  const pollutantData = updatedLocations.map((loc) => ({
+    name: loc.name,
+    pm25: loc.pm25,
+    pm10: loc.pm10,
+    o3: loc.o3,
+    no2: loc.no2,
+  }));
+
+  return {
+    locations: updatedLocations,
+    aqiTrend: updatedTrend,
     pollutantData,
   };
 }

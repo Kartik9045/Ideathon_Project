@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AnalyticsData, generateAllData } from "@/lib/data-generator";
+import { AnalyticsData, generateAllData, updateDataIncrementally } from "@/lib/data-generator";
 import LocationCard from "@/components/LocationCard";
 import Analytics from "@/components/Analytics";
 import { Wind, MapPin } from "lucide-react";
@@ -14,10 +14,12 @@ export default function Index() {
     setData(initialData);
     setIsLoading(false);
 
-    // Set up interval to refresh data every 30 seconds
+    // Set up interval to refresh data every 30 seconds with incremental changes
     const interval = setInterval(() => {
-      const newData = generateAllData();
-      setData(newData);
+      setData((prevData) => {
+        if (!prevData) return prevData;
+        return updateDataIncrementally(prevData);
+      });
     }, 30000);
 
     return () => clearInterval(interval);
